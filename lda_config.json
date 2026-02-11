@@ -1,0 +1,15 @@
+{
+    "num_topics": 5,
+    "random_state": 100,
+    "update_every": 1,
+    "chunksize": 100,
+    "passes": 10,
+    "alpha": "auto",
+    "pdf_base_path": "./pdfs/",
+    "preprocessed_data_base_path": "./preprocessed_data",
+    "R": 30,
+    "min_count": 5,
+    "bigram_threshold": 100,
+    "trigram_threshold": 100,
+    "tfidf_threshold": 0.03
+}

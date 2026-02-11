@@ -1,0 +1,4 @@
+{
+    "pdf_base_path": "./pdfs/",
+    "preprocessed_data_base_path": "./preprocessed_data"
+}

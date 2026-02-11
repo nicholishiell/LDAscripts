@@ -22,7 +22,7 @@ def check_directories(directories):
 
     for directory in directories:
         if not os.path.exists(directory):
-            print(f"Please create a directory called '{directory}' and add the PDF files you want to process in there.")
+            print(f"Directory {directory} does not exist.")
             return True
 
     return False
@@ -100,10 +100,7 @@ def remove_french(text, nlp):
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-def preprocess_pdf(pdf_path):
-
-    # load componets
-    nlp = load_nlp_model()
+def preprocess_pdf(pdf_path, nlp):
 
     # start preprocessing of the pdf
     raw_text = extract_raw_text_from_pdf(pdf_path)
@@ -125,12 +122,11 @@ def save_preprocessed_data(preprocessed_text, preprocessed_data_base_path, pdf_p
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-def generate_n_grams(data_words):
+def generate_n_grams(data_words, min_count=5, bigram_threshold=100, trigram_threshold=100):
 
     # create bi_grams and tri_grams
-    bigram_phrases = gensim.models.Phrases(data_words, min_count=5, threshold=100)
-    trigram_phrases = gensim.models.Phrases(bigram_phrases[data_words], threshold=100)
-
+    bigram_phrases = gensim.models.Phrases(data_words, min_count=min_count, threshold=bigram_threshold)
+    trigram_phrases = gensim.models.Phrases(bigram_phrases[data_words], threshold=trigram_threshold)
     bigram = gensim.models.phrases.Phraser(bigram_phrases)
     trigram = gensim.models.phrases.Phraser(trigram_phrases)
 
@@ -141,12 +137,12 @@ def generate_n_grams(data_words):
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-def remove_common_words_from_corpus(corpus, id2word):
+def remove_common_words_from_corpus(corpus, id2word, tfidf_threshold=0.03):
 
     # remove extreme values from the bag of words using Tfid model
     tfidf = TfidfModel(corpus, id2word=id2word)
 
-    low_value = 0.03
+    low_value = tfidf_threshold
     words  = []
     words_missing_in_tfidf = []
 
